@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Domain
 {
-    public static partial class ServiceCollectionExtensions
+    internal static partial class ServiceCollectionExtensions
     {
         private const string DATABASE = "Churras";
         public static IServiceCollection AddDomainDependencies(this IServiceCollection services)

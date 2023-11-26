@@ -1,8 +1,8 @@
 ﻿using Eveneum;
 
-namespace System
+namespace Domain
 {
-    public interface IEventStore<T> : IEventStore
+    internal interface IEventStore<T> : IEventStore
     {
 
     }
