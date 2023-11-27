@@ -24,8 +24,7 @@ namespace Domain.Entities
             else 
                 Status = BbqStatus.ItsNotGonnaHappen;
 
-            if (@event.TrincaWillPay)
-                IsTrincasPaying = true;
+            IsTrincasPaying = @event.TrincaWillPay == true;
         }
 
         public void When(InviteWasDeclined @event)

@@ -25,19 +25,54 @@ namespace Serverless_Api
         {
             var moderationRequest = await req.Body<ModerateBbqRequest>();
 
+            if (!moderationRequest.GonnaHappen && moderationRequest.TrincaWillPay)
+                return await req.CreateResponse(System.Net.HttpStatusCode.BadRequest, "If GonnaHappen is false, TrincaWillPay must be false");
+
             var bbq = await _repository.GetAsync(id);
+
+            bool wasCanceled = bbq.Status == BbqStatus.ItsNotGonnaHappen;
 
             bbq.Apply(new BbqStatusUpdated(moderationRequest.GonnaHappen, moderationRequest.TrincaWillPay));
 
             var lookups = await _snapshots.AsQueryable<Lookups>("Lookups").SingleOrDefaultAsync();
 
-            foreach (var personId in lookups.PeopleIds)
-            {
-                var person = await _persons.GetAsync(personId);
-                var @event = new PersonHasBeenInvitedToBbq(bbq.Id, bbq.Date, bbq.Reason);
-                person.Apply(@event);
-                await _persons.SaveAsync(person);
-            }
+            if (moderationRequest.GonnaHappen)
+                foreach (var personId in lookups.PeopleIds)
+                {
+                    try
+                    {
+                        if (lookups.ModeratorIds.Contains(personId) && wasCanceled)
+                            continue;
+                        var person = await _persons.GetAsync(personId);
+                        var @event = new PersonHasBeenInvitedToBbq(bbq.Id, bbq.Date, bbq.Reason);
+                        person.Apply(@event);
+                        await _persons.SaveAsync(person, null, personId);
+                    }
+                    catch (Exception err)
+                    {
+                        Console.Write(err);
+                        return await req.CreateResponse(System.Net.HttpStatusCode.InternalServerError, err.Message);
+                    }
+                }
+            else
+                foreach (var personId in lookups.PeopleIds)
+                {
+                    try
+                    {
+                        var person = await _persons.GetAsync(personId);
+                        if (person.Invites.Any(x => x.Id == id))
+                        {
+                            var @event = new InviteWasDeclined(id, personId);
+                            person.Apply(@event);
+                            await _persons.SaveAsync(person, null, personId);
+                        }
+                    }
+                    catch (Exception err)
+                    {
+                        Console.Write(err);
+                        return await req.CreateResponse(System.Net.HttpStatusCode.InternalServerError, err.Message);
+                    }
+                }
 
             await _repository.SaveAsync(bbq);
 

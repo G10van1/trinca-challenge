@@ -6,7 +6,7 @@ using Domain.Entities;
 using Domain.Repositories;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
-using static Domain.ServiceCollectionExtensions;
+
 
 namespace Serverless_Api
 {
