@@ -31,6 +31,14 @@ namespace Serverless_Api
             var bbq = await _repository.GetAsync(id);
 
             bool wasCanceled = bbq.Status == BbqStatus.ItsNotGonnaHappen;
+            
+            if (wasCanceled)
+                return await req.CreateResponse(System.Net.HttpStatusCode.BadRequest, "No changes allowed, it has already been rejected");
+
+            bool isNew = bbq.Status == BbqStatus.New;
+
+            if (!isNew && moderationRequest.GonnaHappen)
+                return await req.CreateResponse(System.Net.HttpStatusCode.BadRequest, "No changes allowed, it has already been approved");
 
             bbq.Apply(new BbqStatusUpdated(moderationRequest.GonnaHappen, moderationRequest.TrincaWillPay));
 
@@ -41,7 +49,7 @@ namespace Serverless_Api
                 {
                     try
                     {
-                        if (lookups.ModeratorIds.Contains(personId) && wasCanceled)
+                        if (lookups.ModeratorIds.Contains(personId))
                             continue;
                         var person = await _persons.GetAsync(personId);
                         var @event = new PersonHasBeenInvitedToBbq(bbq.Id, bbq.Date, bbq.Reason);
