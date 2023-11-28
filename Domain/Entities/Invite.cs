@@ -9,11 +9,4 @@ namespace Domain.Entities
         public InviteStatus Status { get; set; }
         public DateTime Date { get; set; }
     }
-
-    public enum InviteStatus
-    {
-        Pending,
-        Accepted,
-        Declined
-    }
 }

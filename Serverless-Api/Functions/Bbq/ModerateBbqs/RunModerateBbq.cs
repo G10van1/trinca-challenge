@@ -2,6 +2,7 @@ using CrossCutting;
 using Domain.Entities;
 using Domain.Events;
 using Domain.Repositories;
+using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 
@@ -9,12 +10,14 @@ namespace Serverless_Api
 {
     public partial class RunModerateBbq
     {
+        private readonly Person _user;
         private readonly SnapshotStore _snapshots;
         private readonly IPersonRepository _persons;
         private readonly IBbqRepository _repository;
 
-        public RunModerateBbq(IBbqRepository repository, SnapshotStore snapshots, IPersonRepository persons)
+        public RunModerateBbq(IBbqRepository repository, SnapshotStore snapshots, IPersonRepository persons, Person user)
         {
+            _user = user;
             _persons = persons;
             _snapshots = snapshots;
             _repository = repository;
@@ -23,6 +26,11 @@ namespace Serverless_Api
         [Function(nameof(RunModerateBbq))]
         public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Function, "put", Route = "churras/{id}/moderar")] HttpRequestData req, string id)
         {
+            var lookups = await _snapshots.AsQueryable<Lookups>("Lookups").SingleOrDefaultAsync();
+            
+            if (!lookups.ModeratorIds.Contains(_user.Id))
+                return await req.CreateResponse(System.Net.HttpStatusCode.Unauthorized, "Only allowed for moderators");
+
             var moderationRequest = await req.Body<ModerateBbqRequest>();
 
             if (!moderationRequest.GonnaHappen && moderationRequest.TrincaWillPay)
@@ -38,11 +46,9 @@ namespace Serverless_Api
             bool isNew = bbq.Status == BbqStatus.New;
 
             if (!isNew && moderationRequest.GonnaHappen)
-                return await req.CreateResponse(System.Net.HttpStatusCode.BadRequest, "No changes allowed, it has already been approved");
+                return await req.CreateResponse(System.Net.HttpStatusCode.BadRequest, "It has already been approved");
 
             bbq.Apply(new BbqStatusUpdated(moderationRequest.GonnaHappen, moderationRequest.TrincaWillPay));
-
-            var lookups = await _snapshots.AsQueryable<Lookups>("Lookups").SingleOrDefaultAsync();
 
             if (moderationRequest.GonnaHappen)
                 foreach (var personId in lookups.PeopleIds)
