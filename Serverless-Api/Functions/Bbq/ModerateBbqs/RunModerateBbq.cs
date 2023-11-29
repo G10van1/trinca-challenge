@@ -38,9 +38,12 @@ namespace Serverless_Api
 
             var bbq = await _repository.GetAsync(id);
 
-            bool wasCanceled = bbq.Status == BbqStatus.ItsNotGonnaHappen;
+            if (bbq == null)
+                return await req.CreateResponse(System.Net.HttpStatusCode.BadRequest, "Id not found");
+
+            bool isCanceled = bbq.Status == BbqStatus.ItsNotGonnaHappen;
             
-            if (wasCanceled)
+            if (isCanceled)
                 return await req.CreateResponse(System.Net.HttpStatusCode.BadRequest, "No changes allowed, it has already been rejected");
 
             bool isNew = bbq.Status == BbqStatus.New;
