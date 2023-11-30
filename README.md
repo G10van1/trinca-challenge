@@ -45,13 +45,14 @@ Abaixo estão detalhes sobre cada solução implementada em cada endpoint dispon
 - **URL:** `http://localhost:7296/api/person/invites/69e13cc4-b5dd-4790-ba06-267b9205a6ff/accept
 
 - **Implementação:** Implementado tratamento para cálculo da lista de compras. Foi implementado uma lista de convidados que pertence a um churrasco. A pessoa é inserida nesta lista no momento do aceite ou rejeição do convite, sendo que a informação se é vegetariano é atualizada no momento de aceite do convite.
-            A informação de status é atualizada para 'Accepted' neste caso.
+            A informação de status é atualizada para 'Accepted' neste caso. Quando a lista de convidados tem 7 ou mais convidados que aceitaram o convite, o status do churrasco passa para confirmado ('confirmed').
   
 ### 6. Rejeitar convite
 - **Método:** PUT
 - **URL:** http://localhost:7296/api/person/invites/3d9702aa-6f1c-437c-a3ad-bd6c1daea143/decline
 
-- **Implementação:** Da mesma forma que o aceite do convite, a rejeição também entra na lista de convidados do churrasco. Neste caso o status é atualizado para 'Declined'. O tipo de pessoa, vegetaria ou não vegetariana, neste caso não é relevante pois não vai ser contabilizada na lista de compras, devido ao cálculo ser executado varrendo a lista toda e contabilizando pelo status 'Accepted' e tipo de pessoa.
+- **Implementação:** Da mesma forma que o aceite do convite, a rejeição também entra na lista de convidados do churrasco. Neste caso o status é atualizado para 'Declined'. O tipo de pessoa, vegetaria ou não vegetariana, neste caso não é relevante pois não vai ser contabilizada na lista de compras, devido ao cálculo ser executado varrendo a lista toda e contabilizando pelo status 'Accepted' e tipo de pessoa. Em cada rejeição a lista de convidados é verificada e se tiver menos de 7 convidados que aceitaram o convite, o status do churrasco passa para aguardando conformações ('PendingConfirmations').
+').
   
 ### 7. O que comprar?
 - **Método:** Método: GET
@@ -71,7 +72,7 @@ Abaixo estão detalhes sobre cada solução implementada em cada endpoint dispon
 
 ### Demais considerações:
 
-Foram refatoradas todas as lógicas da API e encapsuladas no projeto Domain. Agora podem ser acessadas pela API através de serviços do Domain. 
+Foram refatoradas todas as lógicas da API e encapsuladas no projeto Domain. Agora estas podem ser acessadas pela API através de serviços do Domain. 
 
 
 
