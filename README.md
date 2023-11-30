@@ -44,13 +44,14 @@ Abaixo estão detalhes sobre cada solução implementada em cada endpoint dispon
 - **Método:** PUT
 - **URL:** `http://localhost:7296/api/person/invites/69e13cc4-b5dd-4790-ba06-267b9205a6ff/accept
 
-- **Implementação:** Sem informações.
+- **Implementação:** Implementado tratamento para cálculo da lista de compras. Foi implementado uma lista de convidados que pertence a um churrasco. A pessoa é inserida nesta lista no momento do aceite ou rejeição do convite, sendo que a informação se é vegetariano é atualizada no momento de aceite do convite.
+            A informação de status é atualizada para 'Accepted' neste caso.
   
 ### 6. Rejeitar convite
 - **Método:** PUT
 - **URL:** http://localhost:7296/api/person/invites/3d9702aa-6f1c-437c-a3ad-bd6c1daea143/decline
 
-- **Implementação:** Sem informações.
+- **Implementação:** Da mesma forma que o aceito do convite, a rejeição também entra na lista de convidados do churrasco. Neste caso o status é atualizado para 'Declined'. O tipo de pessoa, vegetaria ou não neste caso não é relevante pois não vai ser contabilizada na lista de compras.
   
 ### 7. O que comprar?
 - **Método:** Método: GET
