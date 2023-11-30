@@ -54,8 +54,8 @@ Abaixo estão detalhes sobre cada solução implementada em cada endpoint dispon
 - **Implementação:** Da mesma forma que o aceite do convite, a rejeição também entra na lista de convidados do churrasco. Neste caso o status é atualizado para 'Declined'. O tipo de pessoa, vegetaria ou não vegetariana, neste caso não é relevante pois não vai ser contabilizada na lista de compras, devido ao cálculo ser executado varrendo a lista toda e contabilizando pelo status 'Accepted' e tipo de pessoa. Em cada rejeição a lista de convidados é verificada, se tiver menos de 7 convidados que aceitaram o convite, o status do churrasco passa para aguardando confirmações ('PendingConfirmations').
   
 ### 7. O que comprar?
-- **Método:** Método: GET
-- **URL:** `URL: http://localhost:7296/api/churras/{{churras-id}}/shopping
+- **Método:** GET
+- **URL:** `http://localhost:7296/api/churras/{{churras-id}}/shopping
 - **Cabeçalho:** 
   - personId: {{moderador-1}}
 - **Corpo da Requisição:** Vazio
@@ -72,6 +72,7 @@ Abaixo estão detalhes sobre cada solução implementada em cada endpoint dispon
 ### Demais considerações:
 
 Foram refatoradas todas as lógicas da API e encapsuladas no projeto Domain. Agora estas podem ser acessadas pela API através de serviços do Domain. 
+Foram tratadas algumas situações relevantes na entrada de dados e em alguns casos é retornado status 400 (Bad Request).
 
 
 
