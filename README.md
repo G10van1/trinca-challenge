@@ -67,7 +67,9 @@ Abaixo estão detalhes sobre cada solução implementada em cada endpoint dispon
 }
 ```
 
-- **Implementação:** Criado novo endpoint, calcula a lista de compras do churrsco com base em uma lista de convidados. O cálculo é realizado varrendo a lista e somando as quantidades de produtos conforme o status do convidado ('Accepted') e o tipo (isVeg), vegetariano ou não vegetariano. Somente moderadores podem acessar este endpoint. A lista de compras só é fornecida quando um churrasco está com estado confirmado.
+- **Implementação:** Criado novo endpoint, este calcula a lista de compras do churrasco com base em uma lista de convidados. O cálculo é realizado varrendo esta lista e somando as quantidades de produtos conforme o status do convidado ('Accepted') e o tipo (isVeg), vegetariano ou não vegetariano. Somente moderadores podem acessar este endpoint. A lista de compras só é fornecida quando um churrasco está com estado confirmado.
+
+  **Demais considerações:** Foram refatoradas todas as lógicas da API e encapsuladas no projeto Domain. Agora podem ser acessadas pela API através de serviços do Domain.
 
 
 
