@@ -1,6 +1,6 @@
 ﻿namespace Domain.Events
 {
-    public class PersonHasBeenCreated : IEvent
+    internal class PersonHasBeenCreated : IEvent
     {
         public string Id { get; }
         public string Name { get; }

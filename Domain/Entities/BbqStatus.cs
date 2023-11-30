@@ -1,6 +1,6 @@
 ﻿namespace Domain.Entities
 {
-    public enum BbqStatus
+    internal enum BbqStatus
     {
         New,
         PendingConfirmations,

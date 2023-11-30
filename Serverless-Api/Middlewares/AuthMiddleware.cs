@@ -15,10 +15,10 @@ using Microsoft.Azure.Functions.Worker.Middleware;
 namespace Serverless_Api.Middlewares
 {
     internal class AuthMiddleware : IFunctionsWorkerMiddleware
-    {
+    {       
         public async Task Invoke(FunctionContext context, FunctionExecutionDelegate next)
-        {
-            var loggedPerson = context.InstanceServices.GetService<Person>();
+        {  
+            var loggedPerson = context.InstanceServices.GetService<PersonId>();
 
             context.BindingContext.BindingData.TryGetValue("headers", out object headers);
 

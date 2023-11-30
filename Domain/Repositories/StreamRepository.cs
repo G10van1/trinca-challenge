@@ -30,8 +30,18 @@ namespace Domain.Repositories
         public async Task<StreamHeaderResponse> GetHeaderAsync(string streamId)
             => await _eventStore.ReadHeader(streamId);
 
-        public virtual async Task SaveAsync(T entity) 
-            => await _eventStore.WriteToStream(entity.Id, entity.Changes.Select(evento => new EventData(entity.Id, evento, null, entity.Version, DateTime.Now.ToString())).ToArray(), expectedVersion: entity.Version == 0 ? (ulong?)null : entity.Version);
+        public virtual async Task SaveAsync(T entity, object? metadata = null, string? streamId = null)
+        {
+            var version = entity.Version;
+
+            if (streamId != null)
+            {
+                var header = await GetHeaderAsync(streamId);
+                version = header.StreamHeader.Version;
+            }
+
+            await _eventStore.WriteToStream(entity.Id, entity.Changes.Select(evento => new EventData(entity.Id, evento, metadata, version, DateTime.Now.ToString())).ToArray(), expectedVersion: version == 0 ? (ulong?)null : version);
+        }
         
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Domain
 {
-    public interface IEvent
+    internal interface IEvent
     {
 
     }
