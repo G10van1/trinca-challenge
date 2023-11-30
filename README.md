@@ -3,7 +3,7 @@
 ## Visão Geral
 
 Este projeto é uma Web API para gerenciar convites, confirmações, e informações sobre um churrasco. 
-Foi elaborado como solução para o desafio Trinca. Pode ser visualizado na [wiki](https://github.com/trinca137/trinca-challenge/wiki/Comece-por-aqui) onde estão as informações relevantes sobre o desafio.
+Foi elaborado como solução para o desafio Trinca. O desafio pode ser visualizado na [wiki](https://github.com/trinca137/trinca-challenge/wiki/Comece-por-aqui) onde estão as informações relevantes e detalhamento do desafio.
 Abaixo estão detalhes sobre cada solução implementada em cada endpoint disponível.
 
 ## Endpoints
