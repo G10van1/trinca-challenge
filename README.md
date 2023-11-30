@@ -16,13 +16,13 @@ Abaixo estão detalhes sobre cada solução implementada em cada endpoint dispon
   
 ### 2. E aí, vai rolar?
 - **Método:** GET
-- **URL:** `http://localhost:7296/api/churras
+- **URL:** `http://localhost:7296/api/churras`
   
 - **Implementação:** Correção de bug para não mostrar churrascos rejeitados por um moderador.
   
 ### 3. Tem aval dos sócios?
 - **Método:** PUT
-- **URL:** `http://localhost:7296/api/churras/{{churras-id}}/moderar
+- **URL:** `http://localhost:7296/api/churras/{{churras-id}}/moderar`
 
 - **Implementação:** Os bugs conhecidos foram todos solucionados, abaixo as correções e melhorias realizadas:
 - 
@@ -36,26 +36,26 @@ Abaixo estão detalhes sobre cada solução implementada em cada endpoint dispon
   
 ### 4. Churras? Quando?
 - **Método:** GET
-- **URL:** `http://localhost:7296/api/person/invites
+- **URL:** `http://localhost:7296/api/person/invites`
 
 - **Implementação:** Aqui foram realizadas apenas melhorias e organização de código.
   
 ### 5. Aceitar convite
 - **Método:** PUT
-- **URL:** `http://localhost:7296/api/person/invites/69e13cc4-b5dd-4790-ba06-267b9205a6ff/accept
+- **URL:** `http://localhost:7296/api/person/invites/69e13cc4-b5dd-4790-ba06-267b9205a6ff/accept`
 
 - **Implementação:** Implementado tratamento para cálculo da lista de compras. Foi implementado uma lista de convidados que pertence a um churrasco. A pessoa é inserida nesta lista no momento do aceite ou rejeição do convite, sendo que a informação se é vegetariano é atualizada no momento de aceite do convite.
-            A informação de status é atualizada para 'Accepted' neste caso. Quando a lista de convidados tem 7 ou mais convidados que aceitaram o convite, o status do churrasco passa para confirmado ('confirmed').
+            A informação de status é atualizada para 'Accepted' neste caso. Quando a lista de convidados tem 7 ou mais convidados que aceitaram o convite, o status do churrasco passa para confirmado ('Confirmed').
   
 ### 6. Rejeitar convite
 - **Método:** PUT
-- **URL:** http://localhost:7296/api/person/invites/3d9702aa-6f1c-437c-a3ad-bd6c1daea143/decline
+- **URL:** `http://localhost:7296/api/person/invites/3d9702aa-6f1c-437c-a3ad-bd6c1daea143/decline`
 
 - **Implementação:** Da mesma forma que o aceite do convite, a rejeição também entra na lista de convidados do churrasco. Neste caso o status é atualizado para 'Declined'. O tipo de pessoa, vegetaria ou não vegetariana, neste caso não é relevante pois não vai ser contabilizada na lista de compras, devido ao cálculo ser executado varrendo a lista toda e contabilizando pelo status 'Accepted' e tipo de pessoa. Em cada rejeição a lista de convidados é verificada, se tiver menos de 7 convidados que aceitaram o convite, o status do churrasco passa para aguardando confirmações ('PendingConfirmations').
   
 ### 7. O que comprar?
 - **Método:** GET
-- **URL:** `http://localhost:7296/api/churras/{{churras-id}}/shopping
+- **URL:** `http://localhost:7296/api/churras/{{churras-id}}/shopping`
 - **Cabeçalho:** 
   - personId: {{moderador-1}}
 - **Corpo da Requisição:** Vazio
@@ -67,7 +67,7 @@ Abaixo estão detalhes sobre cada solução implementada em cada endpoint dispon
 }
 ```
 
-- **Implementação:** Criado novo endpoint, este calcula a lista de compras do churrasco com base em uma lista de convidados. O cálculo é realizado varrendo esta lista e somando as quantidades de produtos conforme o status do convidado ('Accepted') e o tipo (isVeg), vegetariano ou não vegetariano. Somente moderadores podem acessar este endpoint. A lista de compras só é fornecida quando um churrasco está com estado confirmado.
+- **Implementação:** Criado novo endpoint, este calcula a lista de compras do churrasco com base em uma lista de convidados. O cálculo é realizado varrendo esta lista e somando as quantidades de produtos conforme o status do convidado ('Accepted') e o tipo (isVeg), vegetariano ou não vegetariano. Somente moderadores podem acessar este endpoint. A lista de compras só é fornecida quando um churrasco está com estado confirmado ('Confirmed').
 
 ### Demais considerações:
 
