@@ -24,8 +24,12 @@ Abaixo estão detalhes sobre cada solução implementada em cada endpoint dispon
 - **Método:** PUT
 - **URL:** `http://localhost:7296/api/churras/{{churras-id}}/moderar
 
-- **Implementação:** Sem informações.
-- 
+- **Implementação:** Os bugs conhecidos foram todos solucionados, abaixo as correções e melhorias realizadas:
+              ✔️ Moderadores recebem convite apenas na criação do churrasco, na aprovação apenas os demais funcionários recebem convite.
+              ✔️ Convites são enviados para os funcionários apenas quando o moderador informa que o churrasco vai acontecer.
+              ✔️ Quando a proposta de churrasco é rejeitada, os convites pendentes associados são todos rejeitados.
+              ✔️ O churrasco uma vez rejeitado pelo moderador, não pode mais ser aprovado. Depois de aprovado, pode ser rejeitado.
+  
 ### 4. Churras? Quando?
 - **Método:** GET
 - **URL:** `http://localhost:7296/api/person/invites
