@@ -1,55 +1,53 @@
-using CrossCutting;
+﻿using CrossCutting;
+using Domain.Dtos;
 using Domain.Entities;
 using Domain.Events;
 using Domain.Repositories;
-using Microsoft.Azure.Cosmos;
-using Microsoft.Azure.Functions.Worker;
-using Microsoft.Azure.Functions.Worker.Http;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Serverless_Api
+namespace Domain.Services
 {
-    public partial class RunModerateBbq
+    internal class ServiceModerateBbq : IServiceModerateBbq
     {
-        private readonly Person _user;
+        private readonly PersonId _user;
         private readonly SnapshotStore _snapshots;
         private readonly IPersonRepository _persons;
-        private readonly IBbqRepository _repository;
+        private readonly IBbqRepository _bbqs;
 
-        public RunModerateBbq(IBbqRepository repository, SnapshotStore snapshots, IPersonRepository persons, Person user)
+        public ServiceModerateBbq(IBbqRepository bbqs, SnapshotStore snapshots, IPersonRepository persons, PersonId user)
         {
             _user = user;
             _persons = persons;
             _snapshots = snapshots;
-            _repository = repository;
+            _bbqs = bbqs;
         }
 
-        [Function(nameof(RunModerateBbq))]
-        public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Function, "put", Route = "churras/{id}/moderar")] HttpRequestData req, string id)
+        public async Task<HttpResponse> ModerateBbq(DtoModerateBbqRequest moderationRequest, string id)
         {
             var lookups = await _snapshots.AsQueryable<Lookups>("Lookups").SingleOrDefaultAsync();
-            
-            if (!lookups.ModeratorIds.Contains(_user.Id))
-                return await req.CreateResponse(System.Net.HttpStatusCode.Unauthorized, "Only allowed for moderators");
 
-            var moderationRequest = await req.Body<ModerateBbqRequest>();
+            if (!lookups.ModeratorIds.Contains(_user.Id))
+                return new HttpResponse(System.Net.HttpStatusCode.Unauthorized, "Only allowed for moderators");
 
             if (!moderationRequest.GonnaHappen && moderationRequest.TrincaWillPay)
-                return await req.CreateResponse(System.Net.HttpStatusCode.BadRequest, "If GonnaHappen is false, TrincaWillPay must be false");
+                return new HttpResponse(System.Net.HttpStatusCode.BadRequest, "If GonnaHappen is false, TrincaWillPay must be false");
 
-            var bbq = await _repository.GetAsync(id);
+            var bbq = await _bbqs.GetAsync(id);
 
             if (bbq == null)
-                return await req.CreateResponse(System.Net.HttpStatusCode.BadRequest, "Id not found");
+                return new HttpResponse(System.Net.HttpStatusCode.BadRequest, "Id not found");
 
             bool isCanceled = bbq.Status == BbqStatus.ItsNotGonnaHappen;
-            
+
             if (isCanceled)
-                return await req.CreateResponse(System.Net.HttpStatusCode.BadRequest, "No changes allowed, it has already been rejected");
+                return new HttpResponse(System.Net.HttpStatusCode.BadRequest, "No changes allowed, it has already been rejected");
 
             bool isNew = bbq.Status == BbqStatus.New;
 
             if (!isNew && moderationRequest.GonnaHappen)
-                return await req.CreateResponse(System.Net.HttpStatusCode.BadRequest, "It has already been approved");
+                return new HttpResponse(System.Net.HttpStatusCode.BadRequest, "It has already been approved");
 
             bbq.Apply(new BbqStatusUpdated(moderationRequest.GonnaHappen, moderationRequest.TrincaWillPay));
 
@@ -68,7 +66,7 @@ namespace Serverless_Api
                     catch (Exception err)
                     {
                         Console.Write(err);
-                        return await req.CreateResponse(System.Net.HttpStatusCode.InternalServerError, err.Message);
+                        return new HttpResponse(System.Net.HttpStatusCode.InternalServerError, err.Message);
                     }
                 }
             else
@@ -87,13 +85,14 @@ namespace Serverless_Api
                     catch (Exception err)
                     {
                         Console.Write(err);
-                        return await req.CreateResponse(System.Net.HttpStatusCode.InternalServerError, err.Message);
+                        return new HttpResponse(System.Net.HttpStatusCode.InternalServerError, err.Message);
                     }
                 }
 
-            await _repository.SaveAsync(bbq);
+            await _bbqs.SaveAsync(bbq);
 
-            return await req.CreateResponse(System.Net.HttpStatusCode.OK, bbq.TakeSnapshot());
+            return new HttpResponse(System.Net.HttpStatusCode.OK, bbq.TakeSnapshot());
         }
     }
 }
+

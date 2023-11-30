@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Domain.Entities
 {
-    public class Person : AggregateRoot
+    internal class Person : AggregateRoot
     {
         public string Name { get; set; }
         public bool IsCoOwner { get; set; }

@@ -2,7 +2,7 @@
 
 namespace Domain.Events
 {
-    public class PersonHasBeenInvitedToBbq : IEvent
+    internal class PersonHasBeenInvitedToBbq : IEvent
     {
         public string Id { get; }
         public DateTime Date { get; }

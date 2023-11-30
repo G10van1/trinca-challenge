@@ -5,7 +5,7 @@ using System.Runtime.ExceptionServices;
 
 namespace Domain
 {
-    public abstract class AggregateRoot
+    internal abstract class AggregateRoot
     {
         public string Id { get; set; }
         public ulong Version { get; private set; }

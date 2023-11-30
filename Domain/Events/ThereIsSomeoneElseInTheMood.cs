@@ -2,7 +2,7 @@
 
 namespace Domain.Events
 {
-    public class ThereIsSomeoneElseInTheMood : IEvent
+    internal class ThereIsSomeoneElseInTheMood : IEvent
     {
         public ThereIsSomeoneElseInTheMood(Guid id, DateTime date, string reason, bool isTrincasPaying)
         {

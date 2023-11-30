@@ -9,6 +9,7 @@ using Domain.Repositories;
 using Microsoft.Azure.Cosmos;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
+using Domain.Services;
 
 namespace Domain
 {
@@ -16,9 +17,10 @@ namespace Domain
     {
         private const string DATABASE = "Churras";
         public static IServiceCollection AddDomainDependencies(this IServiceCollection services)
-            => services.AddSingleton(new Person { Id = "e5c7c990-7d75-4445-b5a2-700df354a6a0" })
+            => services.AddSingleton(new PersonId { Id = "e5c7c990-7d75-4445-b5a2-700df354a6a0" })
                 .AddEventStoreDependencies()
-                .AddRepositoriesDependencies();
+                .AddRepositoriesDependencies()
+                .AddDomainServices();
 
         public static IServiceCollection AddEventStoreDependencies(this IServiceCollection services)
         {
@@ -64,6 +66,15 @@ namespace Domain
             => services.AddTransient<IBbqRepository, BbqRepository>()
             .AddTransient<IPersonRepository, PersonRepository>();
 
+        public static IServiceCollection AddDomainServices(this IServiceCollection services)
+            => services.AddTransient<IServiceCreateNewBbq, ServiceCreateNewBbq>()
+                       .AddTransient<IServiceModerateBbq, ServiceModerateBbq>()
+                       .AddTransient<IServiceGetProposedBbqs, ServiceGetProposedBbqs>()
+                       .AddTransient<IServiceGetShoppingListBbq, ServiceGetShoppingListBbq>()
+                       .AddTransient<IServiceAcceptInvite, ServiceAcceptInvite>()
+                       .AddTransient<IServiceDeclineInvite, ServiceDeclineInvite>()
+                       .AddTransient<IServiceGetInvites, ServiceGetInvites>();
+
         private async static Task CreateIfNotExists(this CosmosClient client, string database, string collection)
         {
             var databaseResponse = await client.CreateDatabaseIfNotExistsAsync(database);
@@ -71,7 +82,7 @@ namespace Domain
         }
     }
 
-    public static class Data
+    internal static class Data
     {
         public static List<Person> People => new List<Person>
         {

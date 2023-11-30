@@ -1,6 +1,6 @@
 ﻿namespace Domain.Events
 {
-    public class BbqStatusUpdated : IEvent
+    internal class BbqStatusUpdated : IEvent
     {
         public BbqStatusUpdated(bool gonnaHappen, bool trincaWillPay)
         {

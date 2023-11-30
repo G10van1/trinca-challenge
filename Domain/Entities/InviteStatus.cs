@@ -2,7 +2,7 @@
 
 namespace Domain.Entities
 {
-    public enum InviteStatus
+    internal enum InviteStatus
     {
         Pending,
         Accepted,

@@ -2,7 +2,7 @@
 
 namespace Domain.Entities
 {
-    public class BbqGuests
+    internal class BbqGuests
     {
         public string PersonId { get; set; }
         public bool IsVeg { get; set; }

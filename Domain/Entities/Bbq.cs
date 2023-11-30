@@ -6,7 +6,7 @@ using Domain.Events;
 
 namespace Domain.Entities
 {
-    public class Bbq : AggregateRoot
+    internal class Bbq : AggregateRoot
     {
         public string Reason { get; set; }
         public BbqStatus Status { get; set; }

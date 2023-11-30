@@ -2,7 +2,7 @@
 
 namespace Domain.Events
 {
-    public class InviteWasAccepted : IEvent
+    internal class InviteWasAccepted : IEvent
     {
         public string PersonId { get; set; }
         public string InviteId { get; set; }

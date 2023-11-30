@@ -1,38 +1,30 @@
-using Eveneum;
+﻿using Eveneum;
 using System.Net;
 using CrossCutting;
 using Domain.Events;
 using Domain.Entities;
 using Domain.Repositories;
-using Microsoft.Azure.Functions.Worker;
-using Microsoft.Azure.Functions.Worker.Http;
+using System.Threading.Tasks;
+using System;
+using Domain.Dtos;
 
-namespace Serverless_Api
-{
-    public partial class RunCreateNewBbq
+namespace Domain.Services
+{    
+    internal class ServiceCreateNewBbq : IServiceCreateNewBbq
     {
-        private readonly Person _user;
+        private readonly PersonId _user;
         private readonly SnapshotStore _snapshots;
         private readonly IBbqRepository _bbqs;
         private readonly IPersonRepository _persons;
-        public RunCreateNewBbq(IBbqRepository bbqs, IPersonRepository persons, SnapshotStore snapshots, Person user)
+        public ServiceCreateNewBbq(IBbqRepository bbqs, IPersonRepository persons, SnapshotStore snapshots, PersonId user)
         {
             _user = user;
             _snapshots = snapshots;
             _bbqs = bbqs;
             _persons = persons;
         }
-
-        [Function(nameof(RunCreateNewBbq))]
-        public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Function, "post", Route = "churras")] HttpRequestData req)
-        {
-            var input = await req.Body<NewBbqRequest>();
-
-            if (input == null)
-            {
-                return await req.CreateResponse(HttpStatusCode.BadRequest, "input is required.");
-            }
-
+        public async Task<HttpResponse> CreateNewBbq(DtoNewBbqRequest input)
+        {           
             var churras = new Bbq();
             churras.Apply(new ThereIsSomeoneElseInTheMood(Guid.NewGuid(), input.Date, input.Reason, input.IsTrincasPaying));
 
@@ -58,7 +50,7 @@ namespace Serverless_Api
                 }
             }
 
-            return await req.CreateResponse(HttpStatusCode.Created, churrasSnapshot);
+            return new HttpResponse( HttpStatusCode.Created, churrasSnapshot );
         }
     }
 }

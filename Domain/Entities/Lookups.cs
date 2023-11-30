@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Domain.Entities
 {
-    public class Lookups
+    internal class Lookups
     {
         [JsonProperty("id")]
 
