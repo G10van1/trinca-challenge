@@ -51,7 +51,7 @@ Abaixo estão detalhes sobre cada solução implementada em cada endpoint dispon
 - **Método:** PUT
 - **URL:** http://localhost:7296/api/person/invites/3d9702aa-6f1c-437c-a3ad-bd6c1daea143/decline
 
-- **Implementação:** Da mesma forma que o aceito do convite, a rejeição também entra na lista de convidados do churrasco. Neste caso o status é atualizado para 'Declined'. O tipo de pessoa, vegetaria ou não neste caso não é relevante pois não vai ser contabilizada na lista de compras.
+- **Implementação:** Da mesma forma que o aceite do convite, a rejeição também entra na lista de convidados do churrasco. Neste caso o status é atualizado para 'Declined'. O tipo de pessoa, vegetaria ou não vegetariana, neste caso não é relevante pois não vai ser contabilizada na lista de compras, devido ao cálculo ser executado varrendo a lista toda e contabilizando pelo status 'Accepted' e tipo de pessoa.
   
 ### 7. O que comprar?
 - **Método:** Método: GET
