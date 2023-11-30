@@ -10,6 +10,7 @@ using Microsoft.Azure.Cosmos;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using Domain.Services;
+using static System.Net.WebRequestMethods;
 
 namespace Domain
 {
@@ -90,7 +91,11 @@ namespace Domain
             new Person { Id = "171f9858-ddb1-4adf-886b-2ea36e0f0644", Name = "Marcos Oliveira", IsCoOwner = true },
             new Person { Id = "3f74e6bd-11b2-4d48-a294-239a7a2ce7d5", Name = "Gustavo Sanfoninha", IsCoOwner = true },
             new Person { Id = "795fc8f2-1473-4f19-b33e-ade1a42ed123", Name = "Alexandre Morales", IsCoOwner = false },
-            new Person { Id = "addd0967-6e16-4328-bab1-eec63bf31968", Name = "Leandro Espera", IsCoOwner = false }
+            new Person { Id = "addd0967-6e16-4328-bab1-eec63bf31968", Name = "Leandro Espera", IsCoOwner = false },
+            new Person { Id = "a7xyd92f-ftpo-41f7-bd6f-41853b02c27w", Name = "Ana Maria Silva", IsCoOwner = false },
+            new Person { Id = "97h52e51-70cd-4679-9b2a-357b129f0dc3", Name = "Joana Souza", IsCoOwner = false },
+            new Person { Id = "r9abd34l-pwgk-4057-qt0y-15753g77dc37", Name = "Marta Mendes", IsCoOwner = false }
+
         };
     }
 }
