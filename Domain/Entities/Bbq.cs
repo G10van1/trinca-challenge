@@ -18,7 +18,13 @@ namespace Domain.Entities
         {
             Guests = new List<BbqGuests>();
         }
-        public void When(ThereIsSomeoneElseInTheMood @event)
+
+        protected override void When(IEvent @event)
+        {
+            this.When((dynamic)@event);
+        }
+
+        private void When(ThereIsSomeoneElseInTheMood @event)
         {
             Id = @event.Id.ToString();
             Date = @event.Date;
@@ -27,7 +33,7 @@ namespace Domain.Entities
             IsTrincasPaying = @event.IsTrincasPaying == true;
         }
 
-        public void When(BbqStatusUpdated @event)
+        private void When(BbqStatusUpdated @event)
         {
             if (@event.GonnaHappen)
                 Status = BbqStatus.PendingConfirmations;
@@ -37,7 +43,7 @@ namespace Domain.Entities
             IsTrincasPaying = @event.TrincaWillPay == true;
         }
 
-        public void When(InviteWasAccepted @event)
+        private void When(InviteWasAccepted @event)
         {
             var guest = Guests.FirstOrDefault(x => x.PersonId == @event.PersonId);
 
@@ -58,8 +64,9 @@ namespace Domain.Entities
                         BbqStatus.Confirmed : BbqStatus.PendingConfirmations;
         }
 
-        public void When(InviteWasDeclined @event)
+        private void When(InviteWasDeclined @event)
         {
+
             //TODO:Deve ser possível rejeitar um convite já aceito antes.
             //Se este for o caso, a quantidade de comida calculada pelo aceite anterior do convite
             //deve ser retirado da lista de compras do churrasco.

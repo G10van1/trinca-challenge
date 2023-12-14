@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.CSharp.RuntimeBinder;
 using System.Runtime.ExceptionServices;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Domain
 {
@@ -35,7 +36,7 @@ namespace Domain
         {
             try
             {
-                ((dynamic)this).When((dynamic)@event);
+                When(@event);
             }
             catch (RuntimeBinderException ex)
             {
@@ -43,5 +44,7 @@ namespace Domain
                 ExceptionDispatchInfo.Capture(new RuntimeBinderException(string.Format("Must implement event handler", @event.GetType(), GetType()), ex)).Throw();
             }
         }
+
+        protected abstract void When(IEvent @event);
     }
 }
