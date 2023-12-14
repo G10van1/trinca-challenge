@@ -25,6 +25,9 @@ namespace Domain.Services
         }
         public async Task<HttpResponse> CreateNewBbq(DtoNewBbqRequest input)
         {           
+            if ( input.Date < DateTime.Now )
+                return new HttpResponse(HttpStatusCode.BadRequest, "The date must be later than the current date");
+            
             var churras = new Bbq();
             churras.Apply(new ThereIsSomeoneElseInTheMood(Guid.NewGuid(), input.Date, input.Reason, input.IsTrincasPaying));
 
@@ -47,6 +50,7 @@ namespace Domain.Services
                 catch (Exception err)
                 {
                     Console.WriteLine(err);
+                    return new HttpResponse(HttpStatusCode.InternalServerError, err.Message);
                 }
             }
 
